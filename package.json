@@ -4,7 +4,7 @@
   "description": "Dat socket chat",
   "main": "server.js",
   "scripts": {
-    "prestart": "gulp sass:dist",
+    "prestart": "gulp build",
     "start": "node server.js"
   },
   "author": "Victor Hoang",
