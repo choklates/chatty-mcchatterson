@@ -8,14 +8,21 @@ var runSequence     = require('run-sequence');
 gulp.task('sass', function() {
   return gulp.src('public/css/**/*.+(scss|sass)')
     .pipe(plugins.sass())
-    .pipe(plugins.autoprefixer({
-      browsers: ['last 2 versions'],
-      cascade: false 
-    }))
     .pipe(gulp.dest('public/css'))
     .pipe(bs.reload({
       stream: true
     }));
+});
+
+gulp.task('sass:dist', function() {
+  return gulp.src('public/css/**/*.+(scss|sass)')
+    .pipe(plugins.sass())
+    .pipe(plugins.autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: false 
+    }))
+    .pipe(plugins.minifyCss())
+    .pipe(gulp.dest('public/css'));
 });
 
 gulp.task('bs', ['nodemon'], function() {
@@ -55,5 +62,7 @@ gulp.task('watch', ['bs'], function() {
 });
 
 gulp.task('default', function(callback) {
-  runSequence(['bs', 'watch'], callback);
+  runSequence(['sass', 'bs', 'watch'], callback);
 });
+
+gulp.task('build', ['sass:dist']);
