@@ -5,9 +5,11 @@
   <title>Socket.IO Chat</title>
   <link rel="icon" type="image/x-icon" href="data:image/gif;base64,R0lGODlhIAAgAIAAAM336QAAACH5BAEAAAEALAAAAAAgACAAAAIehI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC5sFADs=">
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700">
 </head>
 <body>
 
+  <div class="chat-header"></div>
   <div class="chat-container">
     <div class="user-container">
       <ul class="user-list js-user-list"></ul>
@@ -16,8 +18,12 @@
     <div class="message-container">
       <ul class="message-list js-message-list"></ul>
       <form class="message-form js-message-form">
-        <input type="text" class="input js-input">
-        <button class="button">Send</button>
+        <div class="segment -input">
+          <input type="text" class="input js-input">
+        </div>
+        <div class="segment -button">
+          <button class="button">Send</button>
+        </div>
       </form>
     </div>
     <!-- /.message-container -->

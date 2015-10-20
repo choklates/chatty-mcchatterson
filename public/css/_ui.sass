@@ -1,0 +1,63 @@
+.chat-header
+  height: $height-header
+  background-color: $bgc-header
+
+.chat-container
+  position: relative
+  height: calc(100vh - #{$height-header})
+
+.user-container
+  position: absolute
+  left: 0
+  height: 100%
+  width: $width-userlist
+  background-color: $bgc-userlist
+
+.message-container
+  position: absolute
+  right: 0
+  height: 100%
+  width: calc(100vw - #{$width-userlist})
+
+.message-list
+  height: calc(100% - #{$height-form})
+  width: 100%
+  overflow-y: auto
+  list-style: none
+  .message
+    padding: 10px 20px
+    &:nth-child(odd)
+      background: $bgc-message-alt
+
+.message-form
+  height: $height-form
+  width: 100%
+  padding: 5px 20px
+  font-size: 0
+  .input
+    border: 1px solid $border-color-form
+    border-top-left-radius: 3px
+    border-bottom-left-radius: 3px
+    padding: 8px
+    width: 100%
+    font-size: 14px
+    outline: 0
+  .button
+    width: 100%
+    border: 1px solid $border-color-form
+    border-top-right-radius: 3px
+    border-bottom-right-radius: 3px
+    padding: 8px
+    background-color: $border-color-form
+    font-size: 14px
+    color: #fff
+
+.segment
+  display: inline-block
+  font-size: initial
+  &.-input
+    height: 100%
+    width: calc(100% - #{$width-formbutton})
+  &.-button
+    height: 100%
+    width: $width-formbutton
