@@ -1,6 +1,6 @@
 'use strict';
 
-var socket, users,
+var socket, users, myId,
   $userList, $messageList, $messageForm, $messageInput;
 
 socket = io();
@@ -12,12 +12,15 @@ $messageInput = $messageForm.find('.js-input');
 $messageForm.on('submit', function(e) {
   e.preventDefault();
 
-  socket.emit('chat message', $messageInput.val());
+  socket.emit('message send', {
+    user: myId,
+    text: $messageInput.val(),
+  });
   $messageInput.val('');
 });
 
-socket.on('chat message', function(message) {
-  $messageList.append($('<li>').addClass('message').text(message));
+socket.on('message incoming', function(data) {
+  $messageList.append($('<li>').addClass('message').text(data.user + ': ' + data.text));
   $messageList[0].scrollTop = $messageList[0].scrollHeight;
 });
 
@@ -26,6 +29,9 @@ socket.on('user connect', function(data) {
 
   users = data.users[0];
   userId = data.userId;
+  if (!myId) {
+    myId = userId
+  }
 
   makeUsersList(users, $userList);
   $messageList.append($('<li>').addClass('message -info').text(userId + ' has joined.'));
@@ -35,7 +41,7 @@ socket.on('user disconnect', function(userId) {
   var index = users.indexOf(userId);
   users.splice(index, 1);
   makeUsersList(users, $userList);
-  $messageList.append($('<li>').addClass('message -info').text(userId + ' has left.'));
+  $messageList.append($('<li>').addClass('message -warn').text(userId + ' has left.'));
 });
 
 function makeUsersList(users, $userList) {

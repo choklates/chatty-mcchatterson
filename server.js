@@ -26,9 +26,9 @@ io.on('connection', function(socket) {
   // everyone except certain socket
   // socket.broadcast.emit('hi');
   
-  socket.on('chat message', function(message) {
-    console.log('message: ' + message);
-    io.emit('chat message', message);
+  socket.on('message send', function(data) {
+    console.log('message: ' + data.text);
+    io.emit('message incoming', data);
   });
 
   socket.on('disconnect', function() {
