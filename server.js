@@ -13,7 +13,15 @@ app.get('/', function(req, res) {
 });
 
 io.on('connection', function(socket) {
-  console.log('a user connected');
+  var users = [io.sockets.connected].map(function(client) {
+    return Object.keys(client);
+  });
+
+  io.emit('user connect', {
+    users: users,
+    userId: socket.id
+  });
+  console.log('a user connected', socket.id);
 
   // everyone except certain socket
   // socket.broadcast.emit('hi');
@@ -24,7 +32,8 @@ io.on('connection', function(socket) {
   });
 
   socket.on('disconnect', function() {
-    console.log('a user disconnected');
+    console.log('a user disconnected', socket.id);
+    io.emit('user disconnect', socket.id);
   });
 });
 
