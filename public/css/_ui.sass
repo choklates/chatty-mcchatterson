@@ -36,9 +36,11 @@
     &:nth-child(odd)
       background: $bgc-message-alt
     &.-info
-      color: dodgerblue
+      color: $message-color--info
     &.-warn
-      color: tomato
+      color: $message-color--warn
+    &.-lastread
+      box-shadow: inset 0 -1px $message-color--lastread
 
 .message-form
   height: $height-form
