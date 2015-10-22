@@ -1,8 +1,16 @@
-var express = require('express');
-var app     = express();
-var http    = require('http').Server(app);
-var io      = require('socket.io')(http);
-var port    = process.env.PORT || 5000;
+var express  = require('express');
+var app      = express();
+var http     = require('http').Server(app);
+var io       = require('socket.io')(http);
+var Firebase = require("firebase");
+
+var port = process.env.PORT || 5000;
+var ref = new Firebase('https://chatty-mcchatterson.firebaseio.com/');
+var refs = {
+  history: ref.child('history'),
+  users: ref.child('users'),
+  rooms: ref.child('rooms')
+};
 
 app.set('port', port);
 
@@ -26,6 +34,7 @@ io.on('connection', function(socket) {
   socket.on('message send', function(data) {
     console.log('message: ' + data.text);
     socket.broadcast.emit('message incoming', data);
+    refs.history.push(data);
   });
 
   socket.on('disconnect', function() {
