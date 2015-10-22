@@ -25,22 +25,43 @@
     addMessage(text, myId);
   });
 
-  socket.on('message incoming', function(data) {
-    addMessage(data.text, data.user);
-    $messageList[0].scrollTop = $messageList[0].scrollHeight;
-  });
-
   socket.on('user connect', function(data) {
     var userId;
 
     users = data.users[0];
     userId = data.userId;
     if (!myId) {
-      myId = userId
+      myId = userId;
+    } else {
+      addMessage(userId + ' has joined.', null, '-info');
     }
 
     makeUsersList(users);
-    addMessage(userId + ' has joined.', null, '-info');
+  });
+
+  socket.on('history retrieved', function(data) {
+    var html, keys, len, message, className;
+
+    html = '';
+    keys = Object.keys(data);
+    len = keys.length;
+    className = '';
+
+    keys.forEach(function(key, i) {
+      message = data[key];
+      if (i === len - 1) {
+        className = '-lastread';
+      }
+
+      html += '<li class="message ' + className + '">' + message.user + ': ' + message.text + '</li>';
+    });
+
+    $messageList.append(html);
+  });
+
+  socket.on('message incoming', function(data) {
+    addMessage(data.text, data.user);
+    $messageList[0].scrollTop = $messageList[0].scrollHeight;
   });
 
   socket.on('user disconnect', function(userId) {

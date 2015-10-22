@@ -25,6 +25,10 @@ io.on('connection', function(socket) {
     return Object.keys(client);
   });
 
+  refs.history.limitToLast(8).once('value', function(snapshot) {
+    io.to(socket.id).emit('history retrieved', snapshot.val());
+  });
+
   io.emit('user connect', {
     users: users,
     userId: socket.id
