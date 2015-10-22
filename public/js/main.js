@@ -22,11 +22,11 @@
     });
 
     $messageInput.val('');
-    $messageList.append($('<li>').addClass('message').text(myId + ': ' + text));
+    addMessage(text, myId);
   });
 
   socket.on('message incoming', function(data) {
-    $messageList.append($('<li>').addClass('message').text(data.user + ': ' + data.text));
+    addMessage(data.text, data.user);
     $messageList[0].scrollTop = $messageList[0].scrollHeight;
   });
 
@@ -39,18 +39,18 @@
       myId = userId
     }
 
-    makeUsersList(users, $userList);
-    $messageList.append($('<li>').addClass('message -info').text(userId + ' has joined.'));
+    makeUsersList(users);
+    addMessage(userId + ' has joined.', null, '-info');
   });
 
   socket.on('user disconnect', function(userId) {
     var index = users.indexOf(userId);
     users.splice(index, 1);
-    makeUsersList(users, $userList);
-    $messageList.append($('<li>').addClass('message -warn').text(userId + ' has left.'));
+    makeUsersList(users);
+    addMessage(userId + ' has left.', null, '-warn');
   });
 
-  function makeUsersList(users, $userList) {
+  var makeUsersList = function(users) {
     var userListHtml = '';
 
     users.forEach(function(user, i) {
@@ -58,5 +58,14 @@
     });
 
     $userList.html(userListHtml);
-  }
+  };
+
+  var addMessage = function(message, user, type) {
+    if (user) {
+      message = user + ': ' + message;
+    }
+    type = type || '';
+
+    $messageList.append($('<li>').addClass('message ' + type).text(message));
+  };
 })();
