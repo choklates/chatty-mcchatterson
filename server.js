@@ -23,17 +23,14 @@ io.on('connection', function(socket) {
   });
   console.log('a user connected', socket.id);
 
-  // everyone except certain socket
-  // socket.broadcast.emit('hi');
-  
   socket.on('message send', function(data) {
     console.log('message: ' + data.text);
-    io.emit('message incoming', data);
+    socket.broadcast.emit('message incoming', data);
   });
 
   socket.on('disconnect', function() {
     console.log('a user disconnected', socket.id);
-    io.emit('user disconnect', socket.id);
+    socket.broadcast.emit('user disconnect', socket.id);
   });
 });
 
