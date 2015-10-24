@@ -42,6 +42,7 @@
   socket.on('history retrieved', function(data) {
     var keys, len, chunk, message, fragment;
 
+    data = data || {};
     keys = Object.keys(data);
     len = keys.length;
     fragment = document.createDocumentFragment();
@@ -82,12 +83,6 @@
   };
 
   var addMessage = function(message, user, type) {
-    if (user) {
-      message = user + '<br>' + message;
-    }
-    type = type || '';
-
-
     var message = new Message({
       type: type,
       user: user,
@@ -109,25 +104,28 @@
 
     fragments.li = document.createElement('li');
     fragments.li.className = className;
-    fragments.header = document.createElement('div');
-    fragments.header.className = 'header';
-    fragments.user = document.createElement('span');
-    fragments.user.className = 'user';
-    fragments.user.textContent = this.user;
-    fragments.avatar = document.createElement('div');
-    fragments.avatar.className = 'avatar';
-    fragments.avatar.dataset.initial = this.user.charAt(0);
-    fragments.time = document.createElement('time');
-    fragments.time.className = 'time';
-    fragments.time.textContent = this.time;
     fragments.text = document.createElement('p');
     fragments.text.className = 'text';
     fragments.text.textContent = this.text;
 
-    fragments.header.appendChild(fragments.user);
-    fragments.header.appendChild(fragments.time);
-    fragments.li.appendChild(fragments.avatar);
-    fragments.li.appendChild(fragments.header);
+    if (this.user) {
+      fragments.header = document.createElement('div');
+      fragments.header.className = 'header';
+      fragments.user = document.createElement('span');
+      fragments.user.className = 'user';
+      fragments.user.textContent = this.user;
+      fragments.avatar = document.createElement('div');
+      fragments.avatar.className = 'avatar';
+      fragments.avatar.dataset.initial = this.user.charAt(0);
+      fragments.time = document.createElement('time');
+      fragments.time.className = 'time';
+      fragments.time.textContent = this.time;
+      fragments.header.appendChild(fragments.user);
+      fragments.header.appendChild(fragments.time);
+      fragments.li.appendChild(fragments.avatar);
+      fragments.li.appendChild(fragments.header);
+    }
+
     fragments.li.appendChild(fragments.text);
 
     return fragments.li;
