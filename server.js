@@ -33,16 +33,14 @@ io.on('connection', function(socket) {
     users: users,
     userId: socket.id
   });
-  console.log('a user connected', socket.id);
 
   socket.on('message send', function(data) {
-    console.log('message: ' + data.text);
+    data.time = Firebase.ServerValue.TIMESTAMP;
     socket.broadcast.emit('message incoming', data);
     refs.history.push(data);
   });
 
   socket.on('disconnect', function() {
-    console.log('a user disconnected', socket.id);
     socket.broadcast.emit('user disconnect', socket.id);
   });
 });

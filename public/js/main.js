@@ -22,7 +22,7 @@
     });
 
     $messageInput.val('');
-    addMessage(text, myId);
+    addMessage(text, myId, null, Date.now());
   });
 
   socket.on('user connect', function(data) {
@@ -82,25 +82,33 @@
     $userList.html(userListHtml);
   };
 
-  var addMessage = function(message, user, type) {
+  var addMessage = function(message, user, type, time) {
     var message = new Message({
       type: type,
       user: user,
-      text: message
+      text: message,
+      time: time
     });
 
     $messageList.append(message);
   };
 
   function Message(data) {
-    var fragments, className;
+    var fragments, className, ts;
 
     fragments = {};
     className = (data.type) ? 'message-frame ' + data.type : 'message-frame';
 
     this.user = data.user;
-    this.time = data.time;
     this.text = data.text;
+
+    ts = new Date(data.time * 1000);
+    this.time = ts.getHours() + ':'
+      + ts.getMinutes() + ', '
+      + (ts.getMonth() + 1) + '/'
+      + ts.getDate();
+
+    console.log(data)
 
     fragments.li = document.createElement('li');
     fragments.li.className = className;
