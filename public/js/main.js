@@ -1,6 +1,6 @@
-'use strict';
-
 (function() {
+  'use strict';
+
   var socket, users, myId,
     $userList, $messageList, $messageForm, $messageInput;
 
@@ -40,23 +40,23 @@
   });
 
   socket.on('history retrieved', function(data) {
-    var html, keys, len, message, className;
+    var keys, len, chunk, message, fragment;
 
-    html = '';
     keys = Object.keys(data);
     len = keys.length;
-    className = '';
+    fragment = document.createDocumentFragment();
 
     keys.forEach(function(key, i) {
-      message = data[key];
+      chunk = data[key];
       if (i === len - 1) {
-        className = '-lastread';
+        chunk.type = '-lastread';
       }
 
-      html += '<li class="message ' + className + '">' + message.user + ': ' + message.text + '</li>';
+      message = new Message(chunk);
+      fragment.appendChild(message)
     });
 
-    $messageList.append(html);
+    $messageList.append(fragment);
   });
 
   socket.on('message incoming', function(data) {
@@ -83,10 +83,53 @@
 
   var addMessage = function(message, user, type) {
     if (user) {
-      message = user + ': ' + message;
+      message = user + '<br>' + message;
     }
     type = type || '';
 
-    $messageList.append($('<li>').addClass('message ' + type).text(message));
+
+    var message = new Message({
+      type: type,
+      user: user,
+      text: message
+    });
+
+    $messageList.append(message);
   };
+
+  function Message(data) {
+    var fragments, className;
+
+    fragments = {};
+    className = (data.type) ? 'message-frame ' + data.type : 'message-frame';
+
+    this.user = data.user;
+    this.time = data.time;
+    this.text = data.text;
+
+    fragments.li = document.createElement('li');
+    fragments.li.className = className;
+    fragments.header = document.createElement('div');
+    fragments.header.className = 'header';
+    fragments.user = document.createElement('span');
+    fragments.user.className = 'user';
+    fragments.user.textContent = this.user;
+    fragments.avatar = document.createElement('div');
+    fragments.avatar.className = 'avatar';
+    fragments.avatar.dataset.initial = this.user.charAt(0);
+    fragments.time = document.createElement('time');
+    fragments.time.className = 'time';
+    fragments.time.textContent = this.time;
+    fragments.text = document.createElement('p');
+    fragments.text.className = 'text';
+    fragments.text.textContent = this.text;
+
+    fragments.header.appendChild(fragments.user);
+    fragments.header.appendChild(fragments.time);
+    fragments.li.appendChild(fragments.avatar);
+    fragments.li.appendChild(fragments.header);
+    fragments.li.appendChild(fragments.text);
+
+    return fragments.li;
+  }
 })();
