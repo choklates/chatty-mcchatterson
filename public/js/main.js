@@ -58,11 +58,12 @@
     });
 
     $messageList.append(fragment);
+    scrollToBottom();
   });
 
   socket.on('message incoming', function(data) {
     addMessage(data.text, data.user);
-    $messageList[0].scrollTop = $messageList[0].scrollHeight;
+    scrollToBottom();
   });
 
   socket.on('user disconnect', function(userId) {
@@ -91,6 +92,11 @@
     });
 
     $messageList.append(message);
+    scrollToBottom();
+  };
+
+  var scrollToBottom = function() {
+    $messageList[0].scrollTop = $messageList[0].scrollHeight;
   };
 
   function Message(data) {
@@ -107,8 +113,6 @@
       + ts.getMinutes() + ', '
       + (ts.getMonth() + 1) + '/'
       + ts.getDate();
-
-    console.log(data)
 
     fragments.li = document.createElement('li');
     fragments.li.className = className;
